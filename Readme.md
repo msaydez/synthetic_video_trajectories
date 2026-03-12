@@ -17,6 +17,9 @@ python cellular_automaton_multiple_aggressiveness.py
 
 ## Evaluation
 
+#### Trained Models
+Download trained models [here](https://1drv.ms/f/s!App_ySGnU8ijvP5uIw1qva19CuLv_w?e=UPT23N). Put in folder named **pretrained**.
+
 ### Data
 - The generated trajectories used in the paper can be found [here] (https://1drv.ms/f/c/a3c853a721c97f9a/IgBju6Z2hhu6SY6Kxz0kH__-AZdBRZywGblksuwVTeH5KvA?e=6fGcFS).
 - The Slope-Track dataset can be found [here](https://1drv.ms/f/c/a3c853a721c97f9a/UgCaf8khp1PIIICjhj8PAAAAADl6ejU4H8z-u3A).
@@ -35,8 +38,7 @@ pip install -U ultralytics sahi
 pip install mamba-ssm[causal-conv1d]
 ~~~
 
-### Trained Models
-Download trained models [here](https://1drv.ms/f/s!App_ySGnU8ijvP5uIw1qva19CuLv_w?e=UPT23N). Put in folder named **pretrained**.
+
 
 #### Training GlideTrack 
 ```
@@ -65,6 +67,7 @@ Then use [TrackEval](https://github.com/JonathonLuiten/TrackEval)
 python TrackEval/scripts/run_mot_challenge.py --GT_FOLDER slope_track --BENCHMARK slope_track --METRICS HOTA CLEAR Identity --TRACKERS_FOLDER yolo11/slopetrack --USE_PARALLEL False --NUM_PARALLEL_CORES 1 --TRACKERS_TO_EVAL NAME_OF_SAVE_FILE
 ```
 ---
+
 
 
 
