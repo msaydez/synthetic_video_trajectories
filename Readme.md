@@ -6,21 +6,13 @@ The project was developed for generating synthetic trajectory data for ski slope
 
 ---
 
-# Files
-
 ### Simulation
 
-This script runs the **cellular_automaton_multiple_aggressiveness.py** and generates synthetic skier trajectories.
+This script runs cellular automata model the and generates synthetic skier trajectories. Running this script produces synthetic trajectories that can later be evaluated. The simulation is non-determinsitic.
 
-The simulation models skier motion on a slope using:
-
-- slope dynamics
-- skier ability levels
-- behavioral parameters
-- multi-skier interactions
-
-Running this script produces synthetic trajectories that can later be evaluated. The simulation is non-determinsitic.
-
+```
+python cellular_automaton_multiple_aggressiveness.py
+```
 ---
 
 ### Evaluation
@@ -59,12 +51,8 @@ Then
 python TrackEval/scripts/run_mot_challenge.py --GT_FOLDER slope_track --BENCHMARK slope_track --METRICS HOTA CLEAR Identity --TRACKERS_FOLDER yolo11/slopetrack --USE_PARALLEL False --NUM_PARALLEL_CORES 1 --TRACKERS_TO_EVAL NAME_OF_SAVE_FILE
 ```
 
-
 ---
+# Trained Models
+Download trained models [here](https://1drv.ms/f/s!App_ySGnU8ijvP5uIw1qva19CuLv_w?e=UPT23N). Put in folder named **pretrained**.
 
 
-# Notes
-
-- The repository focuses on **trajectory generation and evaluation** rather than full visual rendering.
-
-- The generated trajectories are intended for **trajectory analysis and tracking research**.
