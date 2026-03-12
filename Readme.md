@@ -54,7 +54,6 @@ python finetune.py --option 4 --min-len 60 --max-len 60 --batch-size 128 --lr 1e
 ```
 
 #### Testing on DeepEIoU
-- Download [DeepEIoU](https://github.com/hsiangwei0903/Deep-EIoU)
 - Replace their tracker folder with the one in the repository
 - Put deep_eiou_yolov11.py in their tools folder
 
@@ -67,6 +66,7 @@ Then use [TrackEval](https://github.com/JonathonLuiten/TrackEval)
 python TrackEval/scripts/run_mot_challenge.py --GT_FOLDER slope_track --BENCHMARK slope_track --METRICS HOTA CLEAR Identity --TRACKERS_FOLDER yolo11/slopetrack --USE_PARALLEL False --NUM_PARALLEL_CORES 1 --TRACKERS_TO_EVAL NAME_OF_SAVE_FILE
 ```
 ---
+
 
 
 
