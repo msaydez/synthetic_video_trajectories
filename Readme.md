@@ -17,6 +17,11 @@ python cellular_automaton_multiple_aggressiveness.py
 
 ## Evaluation
 
+### Data
+- The generated trajectories used in the paper can be found [here] (https://1drv.ms/f/c/a3c853a721c97f9a/IgBju6Z2hhu6SY6Kxz0kH__-AZdBRZywGblksuwVTeH5KvA?e=6fGcFS).
+- The Slope-Track dataset can be found [here](https://1drv.ms/f/c/a3c853a721c97f9a/UgCaf8khp1PIIICjhj8PAAAAADl6ejU4H8z-u3A).
+- Use create_pickle.py to create the pickle files needed.
+
 ### DeepEIoU + GlideTrack
 
 1. Follow the installation instructions of [DeepEIoU](https://github.com/hsiangwei0903/Deep-EIoU).
@@ -32,10 +37,6 @@ pip install mamba-ssm[causal-conv1d]
 
 ### Trained Models
 Download trained models [here](https://1drv.ms/f/s!App_ySGnU8ijvP5uIw1qva19CuLv_w?e=UPT23N). Put in folder named **pretrained**.
-
-The generated trajectories used in the paper can be found [here] (https://1drv.ms/f/c/a3c853a721c97f9a/IgBju6Z2hhu6SY6Kxz0kH__-AZdBRZywGblksuwVTeH5KvA?e=6fGcFS).
-
-- Use the create_pickle.py file to create pickle files for the training and validation sets. But pickle files can be found [here] (https://1drv.ms/f/c/a3c853a721c97f9a/IgBju6Z2hhu6SY6Kxz0kH__-AZdBRZywGblksuwVTeH5KvA?e=6fGcFS).
 
 #### Training GlideTrack 
 ```
