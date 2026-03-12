@@ -6,7 +6,7 @@ The project was developed for generating synthetic trajectory data for ski slope
 
 ---
 
-### Simulation
+## Simulation
 
 This script runs cellular automata model the and generates synthetic skier trajectories. Running this script produces synthetic trajectories that can later be evaluated. The simulation is non-determinsitic.
 
@@ -15,7 +15,7 @@ python cellular_automaton_multiple_aggressiveness.py
 ```
 ---
 
-### Evaluation
+## Evaluation
 
 ### DeepEIoU + GlideTrack
 
@@ -30,11 +30,14 @@ pip install -U ultralytics sahi
 pip install mamba-ssm[causal-conv1d]
 ~~~
 
-The generated trajectories used in the paper can be found [here] (https://1drv.ms/f/c/a3c853a721c97f9a/IgBju6Z2hhu6SY6Kxz0kH__-AZdBRZywGblksuwVTeH5KvA?e=6fGcFS)
+### Trained Models
+Download trained models [here](https://1drv.ms/f/s!App_ySGnU8ijvP5uIw1qva19CuLv_w?e=UPT23N). Put in folder named **pretrained**.
 
-- Use the create_pickle.py file to create pickle files for the training and validation sets.
+The generated trajectories used in the paper can be found [here] (https://1drv.ms/f/c/a3c853a721c97f9a/IgBju6Z2hhu6SY6Kxz0kH__-AZdBRZywGblksuwVTeH5KvA?e=6fGcFS).
 
-# Training GlideTrack 
+- Use the create_pickle.py file to create pickle files for the training and validation sets. But pickle files can be found [here] (https://1drv.ms/f/c/a3c853a721c97f9a/IgBju6Z2hhu6SY6Kxz0kH__-AZdBRZywGblksuwVTeH5KvA?e=6fGcFS).
+
+#### Training GlideTrack 
 ```
 cd glide
 ```
@@ -44,10 +47,10 @@ python train_syn.py --option 4 --min-len 60 --max-len 60 --batch-size 128 --lr 1
 ```
 Then
 ```  
-python finetune.py --option 4 --min-len 60 --max-len 60 --batch-size 128 --lr 3e-4 --epochs 700 --target-len 60 --hidden-size 90 --model mamba --train --model_name NAME_OF_MODEL
+python finetune.py --option 4 --min-len 60 --max-len 60 --batch-size 128 --lr 1e-4 --epochs 300 --target-len 60 --hidden-size 90 --model mamba --train --model_name NAME_OF_MODEL
 ```
 
-# Testing on Tracker
+#### Testing on DeepEIoU
 - Download [DeepEIoU](https://github.com/hsiangwei0903/Deep-EIoU)
 - Replace their tracker folder with the one in the repository
 - Put deep_eiou_yolov11.py in their tools folder
@@ -61,8 +64,8 @@ Then
 python TrackEval/scripts/run_mot_challenge.py --GT_FOLDER slope_track --BENCHMARK slope_track --METRICS HOTA CLEAR Identity --TRACKERS_FOLDER yolo11/slopetrack --USE_PARALLEL False --NUM_PARALLEL_CORES 1 --TRACKERS_TO_EVAL NAME_OF_SAVE_FILE
 ```
 ---
-# Trained Models
-Download trained models [here](https://1drv.ms/f/s!App_ySGnU8ijvP5uIw1qva19CuLv_w?e=UPT23N). Put in folder named **pretrained**.
+
+
 
 
 
