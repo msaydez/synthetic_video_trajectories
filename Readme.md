@@ -8,7 +8,7 @@ The project was developed for generating synthetic trajectory data for ski slope
 
 ## Simulation
 
-This script runs cellular automata model the and generates synthetic skier trajectories. Running this script produces synthetic trajectories that can later be evaluated. The simulation is non-determinsitic.
+This script runs cellular automata model and generates synthetic skier trajectories. Running this script produces synthetic trajectories that can later be evaluated. The simulation is non-determinsitic.
 
 ```
 python cellular_automaton_multiple_aggressiveness.py
@@ -60,11 +60,12 @@ Run:
 ```
 python tools/deep_eiou_yolov11.py --glide_weights NAME_OF_MODEL --glide_label NAME_OF_SAVE_FILE --in_dim 36 --num_freqs 8 --split test
 ```
-Then
+Then use [TrackEval](https://github.com/JonathonLuiten/TrackEval)
 ```
 python TrackEval/scripts/run_mot_challenge.py --GT_FOLDER slope_track --BENCHMARK slope_track --METRICS HOTA CLEAR Identity --TRACKERS_FOLDER yolo11/slopetrack --USE_PARALLEL False --NUM_PARALLEL_CORES 1 --TRACKERS_TO_EVAL NAME_OF_SAVE_FILE
 ```
 ---
+
 
 
 
