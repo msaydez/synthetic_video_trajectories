@@ -10,8 +10,6 @@ import sys
 from tracker.tracker import matching
 from tracker.tracker.basetrack import BaseTrack, TrackState
 from tracker.tracker.LSTM_utils import normalize_sequence, denormalize_predictions
-from tracker.tracker.LSTM import LSTMPositionPredictor
-from tracker.tracker.mamba_model import MambaPositionPredictor
 from tracker.tracker.mamba_model_adjusted import MambaPositionPredictor
 # ========================
 # LSTM Predictor Definition
@@ -447,7 +445,7 @@ class Deep_EIoU(object):
                 adaptive_expand_scales.append(scale)"""
 
             if self.args.with_reid:
-                emb_dists = matching.embedding_distance(strack_pool, detections) / 4.0
+                emb_dists = matching.embedding_distance(strack_pool, detections) / 2.0
                 emb_dists[emb_dists > self.appearance_thresh] = 1.0
                 emb_dists[ious_dists_mask] = 1.0
                 dists = np.minimum(ious_dists, emb_dists)
@@ -519,7 +517,7 @@ class Deep_EIoU(object):
         ious_dists_mask = (ious_dists > self.proximity_thresh)
 
         if self.args.with_reid:
-            emb_dists = matching.embedding_distance(unconfirmed, detections) / 4.0
+            emb_dists = matching.embedding_distance(unconfirmed, detections) / 2.0
             raw_emb_dists = emb_dists.copy()
             emb_dists[emb_dists > self.appearance_thresh] = 1.0
             emb_dists[ious_dists_mask] = 1.0
@@ -613,3 +611,4 @@ def remove_duplicate_stracks(stracksa, stracksb):
     resa = [t for i, t in enumerate(stracksa) if not i in dupa]
     resb = [t for i, t in enumerate(stracksb) if not i in dupb]
     return resa, resb
+
