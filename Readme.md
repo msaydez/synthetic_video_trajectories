@@ -15,8 +15,7 @@ This script runs cellular automata model and generates synthetic skier trajector
 python cellular_automaton_multiple_aggressiveness.py
 ```
 ---
-
-### Data
+## Data
 - The generated trajectories used in the paper can be found [here](https://1drv.ms/f/c/a3c853a721c97f9a/IgBju6Z2hhu6SY6Kxz0kH__-AZdBRZywGblksuwVTeH5KvA?e=6fGcFS).
 - Use create_pickle.py to create the pickle files needed.
 
@@ -40,3 +39,4 @@ Download trained model [here](https://1drv.ms/u/c/a3c853a721c97f9a/IQDTzMQK7hbCS
 
 ## Acknowledgement  
 The code is based on [SlopeTrack](https://github.com/SlopeTrack/Slope_Track). Thank you for your amazing work!
+
