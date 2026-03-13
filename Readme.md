@@ -21,14 +21,14 @@ python cellular_automaton_multiple_aggressiveness.py
 
 ## Training
 - Go to the SlopeTrack website to download the dataset and their code for GlideTrack [website](https://slopetrack.github.io/).
-- Include [train_syn.py](https://github.com/msaydez/synthetic_video_trajectories/blob/main/glide/train_syn.py) and [finetune.py](https://github.com/msaydez/synthetic_video_trajectories/blob/main/glide/finetune.py) in the **motion_training** folder.
+- Include [train_syn.py](https://github.com/msaydez/synthetic_video_trajectories/blob/main/glide/train_syn.py), [finetune.py](https://github.com/msaydez/synthetic_video_trajectories/blob/main/glide/finetune.py) and [args.py](https://github.com/msaydez/synthetic_video_trajectories/blob/main/glide/args.py) in the **motion_training** folder.
 - Run:
 ```  
-python train_syn.py --option 4 --min-len 60 --max-len 60 --batch-size 128 --lr 1e-4 --epochs 700 --target-len 60 --hidden-size 90 --model mamba --train --synthetic-only
+python train_syn.py --option 4 --min-len 60 --max-len 60 --batch-size 128 --lr 1e-4 --epochs 700 --target-len 60  --model mamba --train --synthetic-only
 ```
 Then
 ```  
-python finetune.py --option 4 --min-len 60 --max-len 60 --batch-size 128 --lr 1e-4 --epochs 300 --target-len 60 --hidden-size 90 --model mamba --train --model_name NAME_OF_MODEL
+python finetune.py --option 4 --min-len 60 --max-len 60 --batch-size 128 --lr 1e-4 --epochs 300 --target-len 60 --model mamba --train --model_name NAME_OF_MODEL
 ```
 
 ## Evaluation
@@ -39,4 +39,5 @@ Download trained model [here](https://1drv.ms/u/c/a3c853a721c97f9a/IQDTzMQK7hbCS
 
 ## Acknowledgement  
 The code is based on [SlopeTrack](https://github.com/SlopeTrack/Slope_Track). Thank you for your amazing work!
+
 
