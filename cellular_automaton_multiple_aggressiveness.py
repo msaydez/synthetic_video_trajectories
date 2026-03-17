@@ -44,13 +44,7 @@ class SkierCA:
         self.dt = dt
         self.turn_steps = 0
         self.min_dist = min_dist  # Minimum allowed distance to other skiers
-        self.overtake_dist = 6  #cells ahead to consider overtaking
-
-        self.delta_history = []   # stores past deltas
-        self.d_safe = 30
-        self.k_rhythm = 4       # number of past steps
-        self.w8 = 0.2           # λ_r (rhythm strength)
-
+                   
         # --------------------------
         # Personal factors
         # --------------------------
@@ -105,8 +99,7 @@ class SkierCA:
         self.w4 = 0.01  # curvature
         self.w5 = 0.1 # air resistance #0.01
         self.w6 = w6  # anticipation factor weight
-        self.w7 = 5.0 #overtake
-        self.gamma = 0.1 #random.uniform(0.1, 0.2) #0.1 # inertia #0.9 random.uniform(0.1, 0.2)
+        self.gamma = 0.1 
 
         # Terrain
         np.random.seed(42)
@@ -114,45 +107,7 @@ class SkierCA:
         self.kappa = np.zeros_like(h)
         for i in range(1, M-1):
             for j in range(1, J-1):
-                self.kappa[i,j] = (h[i+1,j] + h[i-1,j] + h[i,j+1] + h[i,j-1] - 4*h[i,j]) #*500 #1000
-
-        """ self.d = np.array([0.0, -1.0])  # unit vector in (i, j) coordinates
-
-        rng_terrain = np.random.default_rng(42)
-
-        # Local perturbation (height map) \tilde{h}
-        h_tilde = gaussian_filter(rng_terrain.random((M, J)), sigma=terrain_sigma)
-
-        # Coordinates x = (i, j) on the lattice
-        ii, jj = np.meshgrid(np.arange(M, dtype=float),
-                             np.arange(J, dtype=float),
-                             indexing="ij")
-
-        # Base plane term: tan(alpha) * d^T x
-        # d^T x = 0*ii + (-1)*jj = -jj
-        h_plane = np.tan(self.alpha) * (self.d[0] * ii + self.d[1] * jj)
-
-        # Total height field h(x) = tan(alpha) d^T x + \tilde{h}(x)
-        self.h = h_plane + h_tilde
-
-        # Discrete curvature (5-point Laplacian) from total height field
-        self.kappa = np.zeros_like(self.h)
-        for i in range(1, M - 1):
-            for j in range(1, J - 1):
-                self.kappa[i, j] = (
-                        self.h[i + 1, j] + self.h[i - 1, j] +
-                        self.h[i, j + 1] + self.h[i, j - 1] -
-                        4.0 * self.h[i, j]
-                )"""
-
-        #segments = load_tracks_from_pickle("all_traj_occluded/view_01_clean_plus_occluded.pkl")
-
-        #tracks_img = extract_image_space_tracks(segments)
-        #print(segments)
-        #tracks_ca  = image_to_ca(segments, M, J, IMG_W, IMG_H)
-
-        #self.kappa = build_curvature_map(tracks_ca, M, J)
-
+                self.kappa[i,j] = (h[i+1,j] + h[i-1,j] + h[i,j+1] + h[i,j-1] - 4*h[i,j])
 
         # Friction field
         np.random.seed(60)
@@ -164,13 +119,9 @@ class SkierCA:
     # --------------------------
     # Transfer factors
     # --------------------------
-    """def fslope(self, delta):
-        return 1 - np.exp(-self.w1 * np.sin(self.alpha))"""
-
     def fslope(self, delta):
-        s = 1 - np.exp(-self.w1 * np.sin(self.alpha))  # Eq. (3)
-        return s #* COS_THETA[delta]
-
+        return 1 - np.exp(-self.w1 * np.sin(self.alpha)) 
+      
     def fboundary(self, i_p):
         d = min(i_p, (self.M-1) - i_p)
         #print(d)
@@ -186,31 +137,9 @@ class SkierCA:
     def inertia(self, delta):
         return np.exp(-self.gamma * self.v * abs(delta - self.delta_prev))
 
-    """def inertia(self, delta):
-        return np.exp(self.v * abs(delta - self.delta_prev)/self.aggressiveness)"""
 
     def ffriction(self, i_p, j_p):
         return np.exp(-self.w2 * self.mu[i_p, j_p])
-
-    def fovertake(self, i_p, j_p, others):
-        factor=1.0
-        for o in others:
-            # same downhill path
-            if o.i == i_p and o.j > j_p:
-                d_ahead = o.j - j_p
-
-                # ignore immediate collision zone
-                if d_ahead <= self.min_dist:
-                    continue
-
-                # ignore too-far skiers
-                if d_ahead > self.overtake_dist:
-                   continue
-
-                rel_speed = self.v - o.v
-                if rel_speed > 0:
-                    factor *= np.exp(-self.w7 * d_ahead / (rel_speed + 1e-6))
-        return factor
 
     def fanticipation(self, i_p, j_p, others):
         dmin = np.inf
@@ -240,13 +169,10 @@ class SkierCA:
 
             # Basic probability factors
             prob = self.fslope(d) * self.fboundary(i_p) * self.fcurve(i_p, j_p) * \
-                   self.fair() * self.inertia(d) * self.ffriction(i_p, j_p) #* self.frhythm(d, i_p, j_p)
-
+                   self.fair() * self.inertia(d) * self.ffriction(i_p, j_p)
             # Anticipation
             if others:
-                #print(l)
-                prob = prob  * self.fanticipation(i_p, j_p, others) #* self.fovertake(i_p, j_p, others)
-
+                prob = prob  * self.fanticipation(i_p, j_p, others)
             if prob > 0:
                 P_tilde[d] = prob
 
@@ -306,26 +232,14 @@ class SkierCA:
             else:
                 return False
 
-        """if probs is None:
-            return False"""
-
-
         # Choose move
         delta_new = random.choices(list(probs.keys()), weights=probs.values())[0]
-        self.delta_history.append(delta_new)
-
-        # Optional: cap history size
-        if len(self.delta_history) > self.k_rhythm:
-            self.delta_history.pop(0)
-        #delta_new = max(probs, key=probs.get)
 
         # Update speed and position
         self.update_speed(delta_new)
         di, dj = DIRECTIONS[delta_new]
         self.i += di
         self.j += dj
-        """if reserved is not None:
-            reserved.add((i_p, j_p))"""
         self.delta_prev = delta_new
 
         # Record trajectory
@@ -436,21 +350,9 @@ if __name__ == "__main__":
 
 
 
-    n_runs = 50 #30 #20
-    views = [1,2,3,4,5,6,7,8] #, #5, 6, 7, 8 1, 2, 3, 4
+    n_runs = 50 
+    views = [1,2,3,4,5,6,7,8]
     num_views = len(views)
-    """num_skiers = 30 #50 #300
-
-    M, J = 200, 600 #600
-    img_w, img_h = 1920, 1080
-    sigma = 9
-    alpha = 18
-    fps = 30
-
-    steps_total = 3000
-    stagger = 2500"""
-
-
 
     # Resolution options
     img_sizes = [
@@ -484,10 +386,6 @@ if __name__ == "__main__":
 
         img_w, img_h, alpha, fps = sample_generation_config(img_sizes, alpha_range, fps_list)
         alpha = int(alpha)
-        #img_w, img_h = 1920,1080
-        #fps = 30
-        #J=300
-        #M=200
 
         fov = rng.integers(1000, 1500)
         fx, fy = fov, fov
@@ -505,14 +403,13 @@ if __name__ == "__main__":
             alpha=alpha
 
         )
-        # plot_trapezoidal_automaton(skiers, M=M, J=J, alpha_deg=alpha, sigma=sigma)
+
+        #Plots
         # plot_skiers_clashing(skiers, M=M, J=J)
         #save_frames_and_video(skiers)
         check_cell_collisions(skiers)
         #plot_skiers_trajectories(skiers, M=M, J=J, sigma=9)
-        # plot_trapezoidal_automaton(skiers, M=M, J=J, alpha_deg=alpha, sigma=sigma)
-        # plot_traj_projected(skiers, M, J, img_w, img_h)
-        #plot_simulation_curvature(skiers)
+        # plot_simulation_curvature(skiers)
         # #plot_speed_time(skiers)
         # #plot_space_time(skiers)
         # #plot_lateral_time(skiers)
@@ -526,9 +423,6 @@ if __name__ == "__main__":
         slope_length_m = J * cell_size
 
         #split = choose_split(rng.random(), train=0.7, val=0.2, test=0.1)
-
-
-
 
         for v_idx, view in enumerate(views):
             # Project for this view
