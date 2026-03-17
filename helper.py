@@ -8,6 +8,7 @@ from copy import deepcopy
 from scipy.stats import wasserstein_distance
 import re
 
+
 def check_cell_collisions(skiers):
     """
     Checks whether any two skiers occupy the same cell (i, j)
@@ -325,45 +326,16 @@ def project_trajectories_pinhole(
 
                 world_pts.append([X, Y, Z, 1])
 
-            # world_trajs.append(pts)
-
             world_pts = np.asarray(world_pts)
-            # print(world_pts.shape)
-            # world_pts = world_pts.squeeze(0)
-            # print(world_pts.shape)
 
-            # Smooth trajectory in world space
-            """for k in range(3):
-                world_pts[:, k] = gaussian_filter1d(world_pts[:, k], smooth_sigma)"""
-
-            # Camera at bottom of slope
-            t = np.array([
-                0,
-                0,
-                0
-            ])
-            # t = np.zeros((3, 1), np.float32)
-
-            """# Camera axes
-            slope_dir = np.array([0, 1, np.tan(theta)])  # slope vector
-            slope_dir /= np.linalg.norm(slope_dir)
-
-            x_dir = np.array([1, 0, 0])  # lateral
-            y_dir = np.cross(slope_dir, x_dir)  # perpendicular up
-            y_dir /= np.linalg.norm(y_dir)
-
-            R = np.column_stack([x_dir, y_dir, slope_dir])"""
-            t = t.reshape(-1, 1)
-            # print(R.T,t)
-            # print(R.shape, t.shape, world_pts.T.shape)
             L_s = (J - 1) * 0.5
             L_y = L_s * np.cos(theta)
             L_z = L_s * np.sin(theta)
-            # print(L_z)
             L_x = ((M - 1) * 0.5)
             s = 1.0 / np.sqrt(2.0)
-            target = np.array([L_x, L_y, 0])
+    
             if view == 1:
+                #BOTTOM-CENTER
                 C = np.array([L_x / 2.0, L_y, -L_z + 10])  # 50
                 R = np.array([
                     [1., 0., 0.],
@@ -371,7 +343,9 @@ def project_trajectories_pinhole(
                     [0., -1., 0.]
                 ])
                 t = (-R @ C).reshape(3, 1)
+                
             elif view == 2:
+                #TOP-CENTER
                 C = np.array([L_x / 2.0, 0.0, 10.0])
                 R = np.array([
                     [1., 0., 0.],
@@ -389,7 +363,9 @@ def project_trajectories_pinhole(
                 ])
                 R = R @ Rx
                 t = (-R @ C).reshape(3, 1)
+                
             elif view == 3:
+                # LEFT
                 C = np.array([0-50, L_y / 2, 0.0]) #0-50, L_y / 2, 10.0
                 R = np.array([
                     [0., 1., 0.],
@@ -405,9 +381,9 @@ def project_trajectories_pinhole(
                 ])
                 R = R @ Rx"""
                 t = (-R @ C).reshape(3, 1)
-
-
+                
             elif view == 4:
+                # right
                 C = np.array([L_x+50, L_y / 2, 0.0])
                 R = np.array([
                     [0., -1., 0.],
@@ -424,8 +400,9 @@ def project_trajectories_pinhole(
                 ])
                 R = R @ Rx"""
                 t = (-R @ C).reshape(3, 1)
+                
             elif view == 5:
-                # TOP-LEFT corner (outside: -X, -Y), looking inward (+X, +Y)
+                # TOP-LEFT corner 
                 C = np.array([0.0 , 0.0 , 10.0]) #0.0 + 20, 0.0 + 20, 20.0
 
                 R = np.array([
@@ -443,8 +420,9 @@ def project_trajectories_pinhole(
                 ])
                 R = R @ Rx
                 t = (-R @ C).reshape(3, 1)
+                
             elif view == 6:
-                # TOP-RIGHT corner (outside: +X, -Y), looking inward (-X, +Y)
+                # TOP-RIGHT corner 
                 C = np.array([L_x, 0.0, 10.0])
 
                 R = np.array([
@@ -462,8 +440,9 @@ def project_trajectories_pinhole(
                 ])
                 R = R @ Rx
                 t = (-R @ C).reshape(3, 1)
+                
             elif view == 7:
-                # BOTTOM-LEFT corner (outside: -X, +Y), looking inward (+X, -Y)
+                # BOTTOM-LEFT corner 
                 C = np.array([0.0, L_y , -L_z + 10.0])  # 0.0-20, L_y+20 , -L_z + 50.0
 
                 R = np.array([
@@ -477,7 +456,7 @@ def project_trajectories_pinhole(
                 # fy = 1500.0
 
             elif view == 8:
-                # BOTTOM-RIGHT corner (outside: +X, +Y), looking inward (-X, -Y)
+                # BOTTOM-RIGHT corner 
                 C = np.array([L_x, L_y , -L_z + 10.0])
 
                 R = np.array([
@@ -528,21 +507,14 @@ def project_trajectories_pinhole(
             w = pts[:, 2]
             u = pts[:, 0]/w
             v = pts[:, 1]/w
-            #print(Z==w)
-
-            #u = fx * cam_pts[:, 0] / Z + cx
-            #v = fy * cam_pts[:, 1] / Z + cy
+            
             proj_pts = np.stack([u, v, w], axis=1)
-            # print(proj_pts)
+            
 
             # -------------------------------------------------------
             # Interpolate to video frames
             ca_times = start_step + np.arange(len(proj_pts)) * ca_dt
 
-            # print(ca_times.shape, proj_pts.shape)
-            # total_time = ca_times[-1]
-            # n_frames = int(np.ceil(total_time * video_fps))
-            # frame_times = np.linspace(0, total_time, n_frames)
 
             interp_u = interp1d(ca_times, proj_pts[:, 0], kind="linear", bounds_error=False,
                                 fill_value=np.nan)
@@ -561,7 +533,7 @@ def project_trajectories_pinhole(
                     | (~np.isfinite(u_f)) | (~np.isfinite(v_f))
             )
 
-            # z_f = z_f [inside_mask]
+            
 
             # Valid where we have a real projection + in front of camera + inside image
 
@@ -575,8 +547,6 @@ def project_trajectories_pinhole(
                     (v_f >= 0) & (v_f <= img_h)
             )
 
-            # print(u_f.shape, v_f.shape, z_f.shape, z_f[valid].shape)
-
             proj_traj = np.stack([u_f, v_f], axis=1)
 
             # -------------------------------------------------------
@@ -584,14 +554,10 @@ def project_trajectories_pinhole(
             # Keep NaN where invalid (object not present / not visible)
             h_px = np.full_like(z_f, np.nan, dtype=float)
             w_px = np.full_like(z_f, np.nan, dtype=float)
-            """h_px = fy * person_height_m / z_f
-            w_px = fx * person_width_m / z_f"""
 
             h_px[valid] = fy * person_height_m / z_f[valid]
             w_px[valid] = fx * person_width_m / z_f[valid]
-
-            # print(u_f.shape, v_f.shape, h_px.shape, w_px.shape)
-
+            
             bboxes = np.stack([u_f, v_f, w_px, h_px], axis=1)
 
             # -------------------------------------------------------
@@ -599,8 +565,6 @@ def project_trajectories_pinhole(
             diffs = np.diff(proj_traj, axis=0)
             speed = np.linalg.norm(diffs, axis=1) * video_fps
             speed = np.concatenate([[0.0], speed])
-
-            # print(z_f.shape, bboxes.shape)
 
             z_vals.append(z_f)
             all_bboxes.append(bboxes)
@@ -1299,10 +1263,6 @@ def normalize_segments_running_mean_direction(segments, sort_by_frame=True):
                     ])
 
     return out
-
-from copy import deepcopy
-import numpy as np
-
 
 def normalize_segments_by_trajectory_direction(segments, sort_by_frame=True):
     """
