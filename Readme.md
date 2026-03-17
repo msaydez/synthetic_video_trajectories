@@ -14,6 +14,9 @@ This script runs cellular automata model and generates synthetic skier trajector
 ```
 python cellular_automaton_multiple_aggressiveness.py
 ```
+
+Run to clean up the sequence lengths:
+
 ```
 python fix_sequence_lengths.py
 ```
