@@ -143,7 +143,7 @@ if __name__ == "__main__":
     if os.path.isdir(train_folder):
         convert_mot_to_mamba_dataset(train_folder, train_output)
     else:
-        print("⚠️ Train folder not found, skipping...")
+        print("Train folder not found, skipping...")
 
     """# Validation
     val_folder = os.path.join(base_folder, "gen/val")
@@ -151,12 +151,12 @@ if __name__ == "__main__":
     if os.path.isdir(val_folder):
         convert_mot_to_mamba_dataset(val_folder, val_output)
     else:
-        print("⚠️ Validation folder not found, skipping...")"""
+        print(" Validation folder not found, skipping...")"""
 
-    """train_folder = os.path.join(base_folder, "train")
-    train_output = os.path.join("train_set_gen_reg.pkl")
-    if os.path.isdir(train_folder):
-        convert_mot_to_mamba_dataset(train_folder, train_output)
+    """test_folder = os.path.join(base_folder, "test")
+    test_output = os.path.join("test_set_gen.pkl")
+    if os.path.isdir(test_folder):
+        convert_mot_to_mamba_dataset(test_folder, test_output)
     else:
-        print("⚠️ Train folder not found, skipping...")"""
+        print("Test folder not found, skipping...")"""
 
